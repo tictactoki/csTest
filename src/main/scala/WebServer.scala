@@ -17,6 +17,9 @@ import scala.io.StdIn
 
 trait Route extends DefaultJsonProtocol with SprayJsonSupport {
 
+  /**
+    * route for get the list with input prefix
+    */
   protected val autocomplete = path("autocomplete") {
     get {
       parameter("word".as[String]) { input =>
@@ -29,6 +32,9 @@ trait Route extends DefaultJsonProtocol with SprayJsonSupport {
 
 }
 
+/**
+  * Webserver
+  */
 object WebServer extends Route with App {
 
   implicit val system = ActorSystem("simple-complete-system")
