@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.model.headers.HttpOriginRange
+import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.{CorsSettings, HttpHeaderRange}
@@ -31,6 +31,10 @@ trait Route extends DefaultJsonProtocol with SprayJsonSupport {
     }
   }
 
+  protected val assetRoute = pathPrefix("assets") {
+    getFromDirectory("src/main/front")
+  }
+
 }
 
 /**
@@ -41,14 +45,11 @@ object WebServer extends Route with App {
   implicit val system = ActorSystem("simple-complete-system")
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
-  val seq = scala.collection.immutable.Seq(GET, POST, HEAD, OPTIONS, PUT)
-  val allowHeader = HttpHeaderRange.*
-  val allowOrigin = HttpOriginRange.*
-  val settings = CorsSettings.defaultSettings.copy(allowedMethods = seq, allowedHeaders = allowHeader, allowedOrigins = allowOrigin)
+  val settings = CorsSettings.defaultSettings
 
 
   val route = cors(settings) {
-    autocomplete
+    assetRoute ~ autocomplete
   }
 
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
