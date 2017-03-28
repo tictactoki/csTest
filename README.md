@@ -25,5 +25,7 @@ Run sbt on root directory:
 
 The web server will run on localhost on port 8080
 
+You must install the Allow-Control-Allow-Origin: * plugin on your browser cause of the "No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access."
+
 Then open the index.html file on src/main/front/index.html
 
