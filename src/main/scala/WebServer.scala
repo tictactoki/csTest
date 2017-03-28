@@ -6,9 +6,10 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpMethods._
+import akka.http.scaladsl.model.headers.HttpOriginRange
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import ch.megard.akka.http.cors.CorsSettings
+import ch.megard.akka.http.cors.{CorsSettings, HttpHeaderRange}
 import spray.json.DefaultJsonProtocol
 import ch.megard.akka.http.cors.CorsDirectives._
 
@@ -41,7 +42,10 @@ object WebServer extends Route with App {
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
   val seq = scala.collection.immutable.Seq(GET, POST, HEAD, OPTIONS, PUT)
-  val settings = CorsSettings.defaultSettings.copy(allowedMethods = seq)
+  val allowHeader = HttpHeaderRange.*
+  val allowOrigin = HttpOriginRange.*
+  val settings = CorsSettings.defaultSettings.copy(allowedMethods = seq, allowedHeaders = allowHeader, allowedOrigins = allowOrigin)
+
 
   val route = cors(settings) {
     autocomplete
