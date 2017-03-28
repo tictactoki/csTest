@@ -25,5 +25,5 @@ Run sbt on root directory:
 
 The web server will run on localhost on port 8080
 
-Then open reach the following URL: "http://localhost:8080/assets/index.html"
+Then reach the following URL: "http://localhost:8080/assets/index.html"
 
